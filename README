@@ -1,0 +1,3 @@
+This project implements a challenge-response authentication system that
+uses ring signatures to make revocation more reliable and provide trust.
+Still a work in progress, even at very basic design level
