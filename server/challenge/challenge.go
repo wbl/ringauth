@@ -11,7 +11,11 @@ func main(){
 	var sha = sha256.New()
 	var t = time.Now().UnixNano()
 	var challenge string
-	io.WriteString(sha, fmt.Sprintf("%s:%d:", os.Args[1], t))
+	if  len(os.Args) > 1 {
+		io.WriteString(sha, fmt.Sprintf("%s:%d:", os.Args[1], t))
+	} else {
+		io.WriteString(sha, fmt.Sprintf("testing:%d", t))
+	}
 	chash=sha.Sum(chash)
 	challenge=base64.StdEncoding.EncodeToString(chash)
 	fmt.Printf("%s\n", challenge)
