@@ -1,0 +1,16 @@
+User:
+genring -generate a ring for authentication
+addpart -generate a file that can be used to authenticate to servers
+revokepart - revoke a part
+blamepart - determine which part was used to authenticate from a log
+
+Device
+respond - generate a response for challenge/response authentication
+updatepart - update a part with a revokation
+
+Server
+challenge - generate a challenge that can be sent to respond
+verify - determine if a response authenticates a particular user
+       (needs the challenge)
+
+All values are base64 encoded

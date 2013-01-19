@@ -1,0 +1,49 @@
+package main
+import ("io"
+	"encoding/base64"
+	"github.com/agl/pond/bbssig"
+	"os"
+	"log")
+
+func main(){
+	/* Generate parameters for a new ring and store in public and
+	private. */
+	var sk *bbssig.PrivateKey
+	var randread, err = os.Open("/dev/random")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	sk,err = bbssig.GenerateGroup(randread)
+	if err != nil {
+		log.Fatal(err)
+	}
+	/* Need to output marshelled form of group ring */
+	var pub []byte
+	pub = sk.Group.Marshal()
+	var pubhandle *os.File
+	pubhandle, err = os.Create(os.Args[1])
+	if err != nil {
+		log.Fatal(err)
+	}
+	io.WriteString(pubhandle, base64.StdEncoding.EncodeToString(pub))
+	io.WriteString(pubhandle, "\n")
+	pubhandle.Close()
+
+	/*Now to save private key*/
+	var priv []byte
+	var privhandle *os.File
+	privhandle, err = os.Create(os.Args[2])
+	if err != nil {
+		log.Fatal("err")
+	}
+	priv = sk.Marshal()
+	/*TODO: pros and cons of encrypting this file*/
+	/*We write the group first as it is needed information for
+	 unmarshalling*/
+	io.WriteString(privhandle, base64.StdEncoding.EncodeToString(pub))
+	io.WriteString(privhandle, "\n")
+	io.WriteString(privhandle, base64.StdEncoding.EncodeToString(priv))
+	io.WriteString(privhandle, "\n")
+	privhandle.Close()
+}

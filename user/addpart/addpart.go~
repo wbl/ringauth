@@ -1,0 +1,9 @@
+package main
+import (
+	"bufio"
+	"io"
+	"encoding/base64"
+	"github/agl/pond/bbssig"
+	"log"
+	"os"
+)
