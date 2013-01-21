@@ -1,6 +1,7 @@
 package main
 import ("github.com/agl/pond/bbssig"
 	"common/libs/basepack"
+	"common/libs/objpack"
 	"os"
 	"log")
 
@@ -18,20 +19,12 @@ func main(){
 		log.Fatal(err)
 	}
 	/* Need to output marshelled form of group ring */
-	var pub []byte
-	pub = sk.Group.Marshal()
-	var testgroup *bbssig.Group = new(bbssig.Group)
-	var success bool
-	_, success=testgroup.Unmarshal(pub)
-	if ! success {
-		log.Fatal("Unmarshal failed!")
-	}
 	var pubhandle *os.File
 	pubhandle, err = os.Create(os.Args[1])
 	if err != nil {
 		log.Fatal(err)
 	}
-	basepack.Packout(pubhandle, pub)
+	objpack.PackGroup(pubhandle, sk.Group)
 	pubhandle.Close()
 
 	/*Now to save private key*/
@@ -45,7 +38,7 @@ func main(){
 	/*TODO: pros and cons of encrypting this file*/
 	/*We write the group first as it is needed information for
 	 unmarshalling*/
-	basepack.Packout(privhandle, pub)
+	objpack.PackGroup(privhandle, sk.Group)
 	basepack.Packout(privhandle, priv)
 	privhandle.Close()
 }
