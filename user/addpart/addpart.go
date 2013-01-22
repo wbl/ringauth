@@ -1,6 +1,7 @@
 package main
 import "bufio"
 import "common/libs/basepack"
+import "common/libs/objpack"
 import "github.com/agl/pond/bbssig"
 import "fmt"
 import "log"
@@ -49,7 +50,7 @@ func main(){
 	}
 	{
 		var partbyte = part.Marshal()
-		basepack.Packout(ofhandle,gb)
+		objpack.PackGroup(ofhandle, part.Group)
 		basepack.Packout(ofhandle, partbyte)
 		fmt.Printf("Tag for part is ")
 		basepack.Packout(os.Stdout, part.Tag())
