@@ -1,7 +1,7 @@
 package main
 
 import "bufio"
-import "common/libs/basepack"
+import "common/libs/objpack"
 import "encoding/base64"
 import "fmt"
 import "github.com/agl/pond/bbssig"
@@ -18,19 +18,7 @@ func main(){
 	var partreader = bufio.NewReader(parthandle)
 	var group *bbssig.Group = new(bbssig.Group)
 	var part *bbssig.MemberKey = new(bbssig.MemberKey)
-	{
-		var gb = basepack.Unpack(partreader)
-		var success bool
-		_, success = group.Unmarshal(gb)
-		if ! success {
-			log.Fatal("Unable to unpack group")
-		}
-		var mb = basepack.Unpack(partreader)
-		_, success = part.Unmarshal(group, mb)
-		if ! success {
-			log.Fatal("Unable to unpack part")
-		}
-	}
+	objpack.UnPackPart(partreader, group, part)
 	var tagbytes = part.Tag()
 	fmt.Printf("Tag is %s\n", base64.StdEncoding.EncodeToString(tagbytes))
 }
