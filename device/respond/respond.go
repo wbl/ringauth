@@ -1,6 +1,7 @@
 package main
 import "bufio"
 import "common/libs/basepack"
+import "common/libs/objpack"
 import "crypto/sha256"
 import "encoding/base64"
 import "github.com/agl/pond/bbssig"
@@ -24,21 +25,9 @@ func main(){
 	var group *bbssig.Group = new(bbssig.Group)
 	var mem *bbssig.MemberKey = new(bbssig.MemberKey)
 	var hash = sha256.New()
-	{
-		var gb = basepack.Unpack(partreader)
-		var success bool
-		_, success = group.Unmarshal(gb)
-		if ! success {
-			log.Fatal("Unable to unmarshal group")
-		}
-		var mb = basepack.Unpack(partreader)
-		_, success = mem.Unmarshal(group, mb)
-		if ! success {
-			log.Fatal("Unable to unmarshal share")
-		}
-	}
 	var cb [] byte
 	var response [] byte
+	objpack.UnPackPart(partreader, group, mem)
 	cb, err= base64.StdEncoding.DecodeString(challenge)
 	if err != nil {
 		log.Fatal("Invalid Challenge")
